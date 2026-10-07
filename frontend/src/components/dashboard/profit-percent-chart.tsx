@@ -52,11 +52,11 @@ export function ProfitPercentChart({ data, loading }: ProfitPercentChartProps) {
     return (
       <Card className="border-border/60">
         <CardHeader className="pb-4">
-          <Skeleton className="h-5 w-52" />
-          <Skeleton className="h-3 w-64 mt-1" />
+          <Skeleton className="h-5 w-52" aria-hidden="true" />
+          <Skeleton className="h-3 w-64 mt-1" aria-hidden="true" />
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-[280px] w-full rounded-lg" />
+          <Skeleton className="h-[280px] w-full rounded-lg" aria-hidden="true" />
         </CardContent>
       </Card>
     )
@@ -65,18 +65,44 @@ export function ProfitPercentChart({ data, loading }: ProfitPercentChartProps) {
   const hasData = data.some((d) => d.profitPercent !== 0)
 
   return (
-    <Card className="border-border/60">
+    <Card className="border-border/60" aria-busy={loading}>
       <CardHeader className="pb-4">
-        <CardTitle className="text-base font-semibold">Profit Margin %</CardTitle>
+        <CardTitle id="profit-margin-title" className="text-base font-semibold">
+          Profit Margin %
+        </CardTitle>
         <CardDescription>Monthly profit as a percentage of total income</CardDescription>
       </CardHeader>
       <CardContent>
         {!hasData ? (
-          <div className="flex h-[280px] items-center justify-center text-muted-foreground text-sm">
+          <div
+            role="status"
+            className="flex h-[280px] items-center justify-center text-muted-foreground text-sm"
+          >
             No data available to display
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={280}>
+          <div role="group" aria-labelledby="profit-margin-title">
+            <div className="sr-only">
+              <table>
+                <caption>Monthly profit margin values</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Month</th>
+                    <th scope="col">Profit margin</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((point) => (
+                    <tr key={point.month}>
+                      <th scope="row">{point.month}</th>
+                      <td>{point.profitPercent.toFixed(1)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div aria-hidden="true">
+              <ResponsiveContainer width="100%" height={280}>
             <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" strokeOpacity={0.6} />
               <XAxis
@@ -105,7 +131,9 @@ export function ProfitPercentChart({ data, loading }: ProfitPercentChartProps) {
                 activeDot={{ r: 5, strokeWidth: 0 }}
               />
             </LineChart>
-          </ResponsiveContainer>
+              </ResponsiveContainer>
+            </div>
+          </div>
         )}
       </CardContent>
     </Card>

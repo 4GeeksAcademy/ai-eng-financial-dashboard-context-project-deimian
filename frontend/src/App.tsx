@@ -48,20 +48,35 @@ function App() {
         <div className="flex flex-col gap-8">
           <DashboardHeader period="2024 - Full Year" />
 
+          {loading ? (
+            <p className="sr-only" role="status" aria-live="polite">
+              Loading financial dashboard data.
+            </p>
+          ) : null}
+
           {error ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground"
+            >
               {error}
             </div>
           ) : null}
 
-          <section aria-label="Key performance indicators">
+          <section aria-labelledby="kpi-heading">
+            <h2 id="kpi-heading" className="sr-only">
+              Key performance indicators
+            </h2>
             <KPIRow metrics={metrics} loading={loading} />
           </section>
 
           <section
-            aria-label="Financial charts"
+            aria-labelledby="charts-heading"
             className="grid grid-cols-1 gap-4 xl:grid-cols-2"
           >
+            <h2 id="charts-heading" className="sr-only">
+              Financial charts
+            </h2>
             <IncomeOutcomeChart data={monthlyData} loading={loading} />
             <ProfitPercentChart data={monthlyData} loading={loading} />
           </section>
