@@ -6,7 +6,7 @@ Last updated: 2026-10-07
 
 - `accessibility` — discovered with `npx skills find accessibility`; loaded from `addyosmani/web-quality-skills`. Reviewed its evidence-led WCAG 2.2 guidance before changing dashboard components.
 - `vercel-react-best-practices` — discovered with `npx skills find vercel-react-best-practices`; loaded from `vercel-labs/agent-skills`. The repo is React + TypeScript + Vite, not Next.js; Next-only APIs such as `next/image`, `next/font`, and `next/dynamic` were not introduced. Applied the React guidance to existing React state and to Vite-native document metadata.
-- Ecosystem searches: `npx skills find testing` and `npx skills find performance`.
+- Ecosystem searches: `npx skills find testing` and `npx skills find performance`. The `webapp-testing` skill was explored but not selected/applied because its browser automation setup was unavailable; its unneeded downloaded files are not included in the repository.
 - Additional skill chosen: `performance` from `addyosmani/web-quality-skills`. The Vite baseline emitted a >500 kB minified chunk warning (586.32 kB, 175.58 kB gzip), and the dashboard's Recharts charts were imported statically in `frontend/src/App.tsx`. This is a concrete bundle-size issue that the performance skill's code-splitting and measurement guidance covers. The browser performance tooling/Playwright dependency was not available, so no LCP/INP/CLS or field performance gain is claimed.
 
 ## Applied changes
