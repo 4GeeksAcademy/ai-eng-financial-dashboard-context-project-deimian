@@ -24,6 +24,13 @@ Desde la raíz: `docker compose up --build`. Frontend en puerto 5173, API en 800
 - ✅ El `.env.example` no activa una variable automáticamente: Vite carga `.env`/`.env.local`, no `.env.example`.
 - ✅ Durante el primer diagnóstico, la ruta por proxy en Vite agotó el tiempo aunque la petición alcanzó el backend; después, las comprobaciones locales directas y suites pasaron. No se atribuye el 504 a un fallo del backend sin reproducirlo de nuevo.
 
+## Validación de reglas — Fase 3
+
+- `.agents/rules/frontend.instructions.md` prescribe cubrir cálculos puros en `frontend/src/lib/financial-utils.test.ts` con Vitest.
+- Como tarea real pequeña, se agregaron pruebas de lista vacía para `computeKPIs` y `computeMonthlyData`. La primera conserva métricas en cero y la segunda devuelve una serie vacía; no se cambió código de producto.
+- Validación: `docker compose exec -T frontend npm test -- --run` — 7 passed; `docker compose exec -T frontend npm run lint` — sin errores.
+- `.agents/rules/backend-api.instructions.md` y `runtime-and-env.instructions.md` se contrastaron contra los entry points, rutas, Compose y Dockerfiles citados; esta sesión no afirma haber hecho una tarea de cambio de API para simular una prueba de esas reglas.
+
 ## Límites
 
 No se hizo fork en esta sesión: el remoto `origin` apunta al repositorio de trabajo `4GeeksAcademy/ai-eng-financial-dashboard-context-project-deimian`, mientras `upstream` apunta al repo base. No se cambió configuración de entorno; los archivos `.env` del usuario se mantuvieron fuera de esta fase.
