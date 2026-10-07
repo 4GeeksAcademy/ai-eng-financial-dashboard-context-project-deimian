@@ -67,6 +67,32 @@ describe("computeKPIs", () => {
     const metrics = computeKPIs(onlyOutcomes);
     expect(metrics.profitPercent).toBe(0);
   });
+
+  it("calculates a loss as a negative profit and margin", () => {
+    const lossMovements: FinancialMovement[] = [
+      {
+        create_date: "2024-03-05",
+        amount: 200,
+        operation_type: "income",
+        category: "sales",
+        business_type: "B2C",
+      },
+      {
+        create_date: "2024-03-06",
+        amount: 300,
+        operation_type: "outcome",
+        category: "operational",
+        business_type: "B2B",
+      },
+    ];
+
+    expect(computeKPIs(lossMovements)).toEqual({
+      totalIncome: 200,
+      totalOutcome: 300,
+      profit: -100,
+      profitPercent: -50,
+    });
+  });
 });
 
 describe("computeMonthlyData", () => {
