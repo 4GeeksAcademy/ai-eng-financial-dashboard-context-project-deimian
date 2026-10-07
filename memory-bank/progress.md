@@ -24,7 +24,7 @@ Last updated: 2026-10-07
 ### Vite-compatible React/deployment practice (`4593d88`)
 
 - `frontend/index.html`: meaningful title, description and theme color. These are ordinary static Vite document metadata; no Next.js runtime or deployment platform was added.
-- `frontend/src/App.tsx`: React performance guidance against maintaining state derived from other state was reviewed. (The final implementation instead focuses the measured chunk concern below; calculated values continue to be set from fetched movements in the same effect.)
+- `frontend/src/App.tsx`: React guidance against storing values derived from other state is reflected in the current implementation: `metrics` and `monthlyData` are derived during render from `movements`, not maintained as separate state. The final implementation also addresses the measured chunk concern below.
 
 ### Additional performance skill (`0add2bb`)
 
@@ -43,8 +43,8 @@ Last updated: 2026-10-07
 - Baseline local `cd frontend && npm test` could not run because `vitest` was not installed locally. `npm install` was blocked by permissions on existing `frontend/node_modules`; no permission workaround or environment file modification was made.
 - The documented container toolchain was used instead: `docker compose exec -T frontend npm run lint` passed; `docker compose exec -T frontend npm test -- --run` passed (8 tests); `docker compose exec -T frontend npm run build` passed.
 - Final build output: Vite 8.0.8, 2291 modules transformed; split chunks listed above; no large-chunk warning.
-- Runtime smoke checks: frontend `/` returned HTTP 200 with the updated metadata; backend `http://localhost:8000/api/metrics` returned HTTP 200. One request through `http://localhost:5173/api/metrics` returned HTTP 502; Compose frontend logs reported `ETIMEDOUT` connecting to the backend container. Direct backend request subsequently returned 200. Treat the proxy incident as intermittent/unresolved rather than as a persistent app failure or as fully verified integration.
-- No manual tab-through, assistive technology, rendered accessibility tree, axe/Lighthouse accessibility, browser screenshot, or performance trace was available in this environment. The static implementation and token contrast calculations do not substitute for those checks.
+- Runtime smoke checks: frontend `/` returned HTTP 200 with the updated metadata; backend `http://localhost:8000/api/metrics` returned HTTP 200. Recheck on 2026-10-07 reproduced HTTP 502 through `http://localhost:5173/api/metrics`; Vite logs and a request from the frontend container both timed out connecting to `backend:8000` (`172.18.0.2`). The backend endpoint returned 200 both directly and from inside its own container; a request from the frontend container to the Docker gateway's published port (`172.18.0.1:8000`) also returned 200. This isolates the current failure to direct inter-container routing in this runtime. The gateway address is environment-specific, so it was not added to shared Vite configuration. Frontend-to-backend proxy integration remains unverified/failing in this environment.
+- A real keyboard/assistive-technology check, rendered accessibility-tree inspection, axe/Lighthouse audit, screenshot, and performance trace remain incomplete. An ephemeral Playwright + Chromium attempt could not launch because the dev container lacks `libatk-1.0.so.0`; no project dependency was added. Static code review and token contrast calculations do not substitute for those checks.
 - No backend source changed, so backend tests were not rerun for this work.
 
 ## Scope and limitations
